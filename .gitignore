@@ -20,3 +20,5 @@ __pycache__/
 
 # assets
 assets/logo.idraw
+*.bin
+*.h5

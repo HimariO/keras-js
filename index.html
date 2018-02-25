@@ -15,6 +15,54 @@
   <div id="root"></div>
   <script src="dist/keras.min.js"></script>
   <script src="demos/dist/bundle.min.js"></script>
+  <script type="text/javascript">
+    const model = new KerasJS.Model({
+      filepath: './python/yolo.bin',
+      gpu: true
+    })
+    console.log(model)
+
+    model
+    .ready()
+    .then(() => {
+      console.log('try to predict...')
+      // input data object keyed by names of the input layers
+      // or `input` for Sequential models
+      // values are the flattened Float32Array data
+      // (input tensor shapes are specified in the model config)
+      var canvas = document.createElement('canvas')
+      canvas.height = 608
+      canvas.width = 608
+
+      var ctx = canvas.getContext('2d')
+      var test_img = new Image()
+
+      test_img.onload = function() {
+        ctx.drawImage(test_img, 0, 0, canvas.width, canvas.height)
+        let image_data = ctx.getImageData(0, 0, canvas.width, canvas.height)
+
+        const inputData = {
+          input_1: new Float32Array(image_data.data.buffer)
+        }
+        console.log('img loaded!')
+        console.log(image_data.data)
+        console.log(inputData.input_1)
+
+        // make predictions
+        model.predict(inputData).then(outputData => {
+          console.log('model predict:')
+          console.log(outputData)
+        })
+        .catch(err => {
+          console.error(err)
+          // handle error
+        })
+      }
+
+      test_img.src = './dog.jpg'
+    })
+
+  </script>
 </body>
 
 </html>

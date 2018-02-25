@@ -8,6 +8,7 @@ import Flatten from './Flatten'
 import Reshape from './Reshape'
 import Permute from './Permute'
 import RepeatVector from './RepeatVector'
+import SpaceToDepth from './SpaceToDepth'
 
 export {
   Dense,
@@ -19,5 +20,6 @@ export {
   Flatten,
   Reshape,
   Permute,
-  RepeatVector
+  RepeatVector,
+  SpaceToDepth
 }
