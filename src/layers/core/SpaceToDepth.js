@@ -80,27 +80,27 @@ export default class SpaceToDepth extends Layer {
 
     var subIndexMap = new Tensor([], [this.block_size * this.block_size * this.inputShape[2]], { type: Int32Array })
 
-    for (let i = 0; i < this.block_size; i++) {
-      for (let j = 0; j < this.block_size; j++) {
-        for (let k = 0; k < this.inputShape[2]; k++) {
+    for (let k = 0; k < this.inputShape[2]; k++) {
+      for (let i = 0; i < this.block_size; i++) {
+        for (let j = 0; j < this.block_size; j++) {
           subIndexMap.tensor.set(
-            i * this.block_size * this.inputShape[2] + j * this.inputShape[2] + k,
-            i * this.inputShape[1] + j + k * this.inputShape[0] * this.inputShape[1]
+            i * this.block_size + j + k * Math.pow(this.block_size, 2),
+            k + j * this.inputShape[2] + i * this.inputShape[1] * this.inputShape[2]
           )
         }
       }
     }
     console.log('subIndexMap: ', subIndexMap)
 
-    for (let j = 0; j < this.inputShape[0] / this.block_size; j++) {
-      for (let k = 0; k < this.inputShape[1] / this.block_size; k++) {
+    for (let j = 0; j < block_height; j++) {
+      for (let k = 0; k < block_width; k++) {
         ops.assign(
           this.indexMap.tensor.pick(j, k, null),
           subIndexMap.tensor
         )
         ops.addseq(
           this.indexMap.tensor.pick(j, k, null),
-          j * block_row_surface + k * this.block_size
+          j * block_row_surface * this.inputShape[2] + k * this.block_size * this.inputShape[2]
         )
       }
     }
