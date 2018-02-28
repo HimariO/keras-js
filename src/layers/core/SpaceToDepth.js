@@ -140,7 +140,7 @@ export default class SpaceToDepth extends Layer {
     ]
 
     this._createIndexMap()
-    console.log(this.indexMap)
+    // console.log(this.indexMap)
 
     if (!this.output) {
       this.output = new Tensor([], this.targetShape)
